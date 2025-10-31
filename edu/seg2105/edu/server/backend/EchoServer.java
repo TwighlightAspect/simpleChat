@@ -4,6 +4,8 @@ package edu.seg2105.edu.server.backend;
 // license found at www.lloseng.com 
 
 
+import java.io.IOException;
+
 import ocsf.server.*;
 
 /**
@@ -50,6 +52,10 @@ public class EchoServer extends AbstractServer
   {
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
+    if(msg.equals("/stop"))
+    {
+    	this.stopListening();
+    }
   }
     
   /**
@@ -68,6 +74,17 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStopped()
   {
+	  try {
+		  this.sendToAllClients("Server has shut down.");
+		  for(ConnectionToClient cli:this.getClientConnections())
+		  {
+			  cli.sendToClient("Terminating Client...");
+			  cli.close();
+		  }
+	  }
+	  catch(Exception e){
+		System.out.println(e);  
+	  }
     System.out.println
       ("Server has stopped listening for connections.");
   }
