@@ -25,6 +25,7 @@ public class EchoServer extends AbstractServer
    * The default port to listen on.
    */
   final public static int DEFAULT_PORT = 5555;
+  final public static char COMMAND_PREFIX = '#';
   
   //Constructors ****************************************************
   
@@ -56,6 +57,89 @@ public class EchoServer extends AbstractServer
     {
     	this.stopListening();
     }
+    if(msg instanceof String&&((String) msg).length()>0&&((String)msg).charAt(0)==COMMAND_PREFIX)
+    {
+    	String cmd = ((String)msg).substring(1);
+    	if(cmd.equals("quit"))
+    	{
+    		try {
+    			client.close();
+    		}
+    		catch(Exception e){
+    			try {
+    				client.sendToClient("Disconnection attempt was unsuccessful.");
+    			}
+    			catch(Exception ex)
+    			{
+    				
+    			}
+    		}
+    	}
+    	else if(cmd.equals("logoff"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("sethost"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("setport"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("login"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("gethost"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("getport"))
+    	{
+    		
+    	}
+    	else 
+    	{
+    		try {
+    			client.sendToClient("The command: "+cmd+" does not exist in this context");
+    		}
+    		catch(Exception e)
+    		{
+    			
+    		}
+    	}
+    }
+  }
+  @Override
+  protected void clientConnected(ConnectionToClient client)
+  {
+	  String clientjoinmsg = "A new client has connected!";
+	  this.sendToAllClients(clientjoinmsg);
+	  System.out.println(clientjoinmsg);
+	  try {
+		  client.sendToClient("Welcome to our wonderful server!");
+	  }
+	  catch(Exception e) {
+		  
+	  }
+  }
+  
+  @Override
+  synchronized protected void clientDisconnected(ConnectionToClient client)
+  {
+	  try {
+		  client.sendToClient("Disconnecting...");
+	  }
+	  catch(Exception e)
+	  {
+		  
+	  }
+	  super.clientDisconnected(client);
+	  String clientjoinmsg = "A client has disconnected.";
+	  this.sendToAllClients(clientjoinmsg);
+	  System.out.println(clientjoinmsg);
+	  
   }
     
   /**
@@ -78,6 +162,7 @@ public class EchoServer extends AbstractServer
 		  this.sendToAllClients("Server has shut down.");
 		  for(ConnectionToClient cli:this.getClientConnections())
 		  {
+//			  System.out.println("Closing client");
 			  cli.sendToClient("Terminating Client...");
 			  cli.close();
 		  }
@@ -85,6 +170,14 @@ public class EchoServer extends AbstractServer
 	  catch(Exception e){
 		System.out.println(e);  
 	  }
+	 try {
+		 
+	  this.close();
+	  System.out.println("\n=====================================\n\nServer has been shut down.");
+	 }
+	 catch(Exception e){
+		 System.out.println("Could not stop server");
+	 }
     System.out.println
       ("Server has stopped listening for connections.");
   }
