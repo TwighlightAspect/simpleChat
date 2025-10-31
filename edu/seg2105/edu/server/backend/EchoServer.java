@@ -63,7 +63,13 @@ public class EchoServer extends AbstractServer
     	if(cmd.equals("quit"))
     	{
     		try {
+//    			System.out.println("Disconnecting and Terminating Client...");
+    			client.sendToClient("Disconnecting and Terminating Client...");
+    			client.sendToClient(-1);
     			client.close();
+    			
+    			
+    			System.out.println("Client Terminated");
     		}
     		catch(Exception e){
     			try {
@@ -77,28 +83,21 @@ public class EchoServer extends AbstractServer
     	}
     	else if(cmd.equals("logoff"))
     	{
-    		
+    		try {
+    			client.close();
+    		}
+    		catch(Exception e){
+    			try {
+    				client.sendToClient("Disconnection attempt was unsuccessful.");
+    			}
+    			catch(Exception ex)
+    			{
+    				
+    			}
+    		}
     	}
-    	else if(cmd.equals("sethost"))
-    	{
-    		
-    	}
-    	else if(cmd.equals("setport"))
-    	{
-    		
-    	}
-    	else if(cmd.equals("login"))
-    	{
-    		
-    	}
-    	else if(cmd.equals("gethost"))
-    	{
-    		
-    	}
-    	else if(cmd.equals("getport"))
-    	{
-    		
-    	}
+    	
+    	
     	else 
     	{
     		try {

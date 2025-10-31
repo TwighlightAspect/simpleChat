@@ -26,7 +26,8 @@ public class ChatClient extends AbstractClient
    * The interface type variable.  It allows the implementation of 
    * the display method in the client.
    */
-  ChatIF clientUI; 
+  ChatIF clientUI;
+  boolean terminate = false;
 
   
   //Constructors ****************************************************
@@ -57,7 +58,20 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-    clientUI.display(msg.toString());
+	  try {
+		  if((int)(msg)==-1)
+		  {
+			  quit();
+			  System.exit(0);
+			  return;
+		  }
+	  }
+	  catch(Exception e)
+	  {
+//		  clientUI.display(e.toString());
+		  clientUI.display(msg.toString());
+	  }
+    
     
     
   }
@@ -75,11 +89,36 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e)
     {
-      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
+    	String cmd = message.substring(1);
+    	String sethost = "sethost";
+    	if((cmd.substring(sethost.length())).equals(sethost))
+    	{
+    		this.setHost(message.substring(sethost.length()));
+    	}
+    	else if(cmd.equals("setport"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("login"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("gethost"))
+    	{
+    		clientUI.display(getHost());
+    	}
+    	else if(cmd.equals("getport"))
+    	{
+    		clientUI.display(String.valueOf(getPort()));
+
+    	}
+//      clientUI.display
+//        ("Could not send message to server.  Terminating client.");
+//      quit();
     }
   }
+  
+  
   
   /**
    * This method terminates the client.
