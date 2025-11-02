@@ -89,32 +89,9 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e)
     {
-    	String cmd = message.substring(1);
-    	String sethost = "sethost";
-    	if((cmd.substring(sethost.length())).equals(sethost))
-    	{
-    		this.setHost(message.substring(sethost.length()));
-    	}
-    	else if(cmd.equals("setport"))
-    	{
-    		
-    	}
-    	else if(cmd.equals("login"))
-    	{
-    		
-    	}
-    	else if(cmd.equals("gethost"))
-    	{
-    		clientUI.display(getHost());
-    	}
-    	else if(cmd.equals("getport"))
-    	{
-    		clientUI.display(String.valueOf(getPort()));
-
-    	}
-//      clientUI.display
-//        ("Could not send message to server.  Terminating client.");
-//      quit();
+    	      clientUI.display
+        ("Could not send message to server.  Terminating client.");
+      quit();
     }
   }
   

@@ -101,7 +101,7 @@ public class EchoServer extends AbstractServer
     	else 
     	{
     		try {
-    			client.sendToClient("The command: "+cmd+" does not exist in this context");
+    			client.sendToClient("The command: '"+cmd+"' does not exist in this context");
     		}
     		catch(Exception e)
     		{
@@ -159,6 +159,7 @@ public class EchoServer extends AbstractServer
   {
 	  try {
 		  this.sendToAllClients("Server has shut down.");
+		  System.out.println("Server Shutting Down");
 		  for(ConnectionToClient cli:this.getClientConnections())
 		  {
 //			  System.out.println("Closing client");
@@ -213,6 +214,7 @@ public class EchoServer extends AbstractServer
     catch (Exception ex) 
     {
       System.out.println("ERROR - Could not listen for clients!");
+//      System.out.println(ex);
     }
   }
 }
