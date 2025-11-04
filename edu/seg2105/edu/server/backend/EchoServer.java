@@ -57,12 +57,20 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
-    System.out.println("Message received: " + msg + " from " + client);
-    this.sendToAllClients(msg);
-    if(msg.equals(COMMAND_PREFIX+"stop"))
-    {
-    	this.stopListening();
-    }
+    System.out.println("Message received: " + msg + " from " + client.getInfo("login_id"));
+    if(msg instanceof String && ((String)msg).length() >"#login".length()&&(((String)msg).substring(0,"#login".length())).equals("#login"))
+	{
+		if(client.getInfo("login_id")==null) 
+			{
+				client.setInfo("login_id",((String)msg).substring("#login".length()+1));
+				return;
+			}
+	}
+    this.sendToAllClients(client.getInfo("login_id")+"> "+msg);
+//    if(msg.equals(COMMAND_PREFIX+"stop"))
+//    {
+//    	this.stopListening();
+//    }
     if(msg instanceof String&&((String) msg).length()>0&&((String)msg).charAt(0)==COMMAND_PREFIX)
     {
     	String cmd = ((String)msg).substring(1);
@@ -87,6 +95,7 @@ public class EchoServer extends AbstractServer
     			}
     		}
     	}
+    	
     	else if(cmd.equals("logoff"))
     	{
     		try {
@@ -138,10 +147,10 @@ public class EchoServer extends AbstractServer
     }
   }
   
-  public void HandleAdminInput(Object msg, ServerConsole admin)
-  {
-	  
-  }
+//  public void HandleAdminInput(Object msg, ServerConsole admin)
+//  {
+//	  
+//  }
   @Override
   protected void clientConnected(ConnectionToClient client)
   {
@@ -207,7 +216,7 @@ public class EchoServer extends AbstractServer
 		  for(ConnectionToClient cli:this.getClientConnections())
 		  {
 //			  System.out.println("Closing client");
-			  cli.sendToClient("Terminating Client...");
+//			  cli.sendToClient("Terminating Client...");
 			  cli.close();
 		  }
 	  }
@@ -222,8 +231,8 @@ public class EchoServer extends AbstractServer
 	 catch(Exception e){
 		 System.out.println("Could not stop server");
 	 }
-    System.out.println
-      ("Server has stopped listening for connections.");
+//    System.out.println
+//      ("Server has stopped listening for connections.");
   }
   
   

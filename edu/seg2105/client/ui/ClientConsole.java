@@ -50,7 +50,7 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port) 
+  public ClientConsole(String login_id,String host, int port) 
   {
 	fromConsole = new Scanner(System.in); 
 //	System.out.println(host);
@@ -59,13 +59,13 @@ public class ClientConsole implements ChatIF
 	  
     try 
     {
-      client= new ChatClient(host, port, this);
-      
+      client= new ChatClient(login_id,host, port, this);
+      client.sendToServer("#login "+login_id);
       
     } 
     catch(IOException exception) 
     {
-    	whenDisconnected(host,port);
+    	whenDisconnected(login_id,host,port);
 //    	System.out.println("Not Connected to Server (host: '"+host+"', port: "+String.valueOf(port)+")");
 //    	String sethost = "sethost";
 //    	String setport = "setport";
@@ -128,7 +128,7 @@ public class ClientConsole implements ChatIF
     
   }
   
-  public void whenDisconnected(String host, int port)
+  public void whenDisconnected(String login_id,String host, int port)
   {
 	System.out.println("Not Connected to Server (host: '"+host+"', port: "+String.valueOf(port)+")");
   	String sethost = "sethost";
@@ -158,7 +158,8 @@ public class ClientConsole implements ChatIF
 	    	else if(cmd.equals("login"))
 	    	{
 	    		try {
-	    			client = new ChatClient(tmp_host,tmp_port,this);
+	    			client = new ChatClient(login_id,tmp_host,tmp_port,this);
+	    			client.sendToServer(message+" "+login_id);
 	    		}
 	    		catch(Exception e)
 	    		{
@@ -256,10 +257,19 @@ public class ClientConsole implements ChatIF
   {
     String host = "";
     int port = DEFAULT_PORT;
+    String login_id="";
+    try {
+    	login_id = args[0];
+    }
+    catch(Exception e)
+    {
+    	System.out.println("ERROR - No login ID specified.  Connection aborted.");
+    	System.exit(0);
+    }
 
     try
     {
-      host = args[0];
+      host = args[1];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
@@ -267,7 +277,7 @@ public class ClientConsole implements ChatIF
     }
     try
     {
-    	port = Integer.valueOf(args[1]);
+    	port = Integer.valueOf(args[2]);
     }
     catch(Exception e)
     {
@@ -275,7 +285,7 @@ public class ClientConsole implements ChatIF
     }
     
     while(true) {
-	    ClientConsole chat= new ClientConsole(host, port);
+	    ClientConsole chat= new ClientConsole(login_id,host, port);
 	    
 	    chat.accept();  //Wait for console data
 	    if(chat.getTerminate()) break;

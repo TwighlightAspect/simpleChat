@@ -85,7 +85,8 @@ public class ServerConsole implements ChatIF {
 		String setport = "setport";
     	int tmp_port = port;
 		String message = fromConsole.nextLine();
-		if(message.charAt(0)!='#') return message;
+		if(message.length()==0) return message;
+		if(message.charAt(0)!='#'&&server!=null) return message;
     	String cmd = message.substring(1);
 //	    	System.out.println(cmd);
     	
@@ -101,6 +102,7 @@ public class ServerConsole implements ChatIF {
     		System.out.println("setting port...");
     		tmp_port = Integer.parseInt(cmd.substring(setport.length()+1));
     		System.out.println("port updated to "+cmd.substring(setport.length()+1));
+    		if(server!=null) System.out.println("Server will not start listening on the port "+String.valueOf(tmp_port)+" until the server is closed and restarted");
     		System.out.println();
     	}
     	else if(cmd.equals("start"))
@@ -117,17 +119,22 @@ public class ServerConsole implements ChatIF {
 	    			System.out.println("Could not connect\n");
 	    		}
     		}
-    		else 
+    		else if(server!=null &&(!server.isListening()))
     			{
+//    			System.out.println("server was not listening");
     				try {
+    					server.setPort(tmp_port);
     					server.listen();
-    					server.run();
+//    					server.run();
     				}
     				catch(Exception e)
     				{
     					System.out.println("Server could not start listening");
     				}
     			}
+    		else {
+    			System.out.println("Server is already listening");
+    		}
     	}
 //	    	else if(cmd.equals("gethost"))
 //	    	{
@@ -140,7 +147,18 @@ public class ServerConsole implements ChatIF {
     	}
     	else if(cmd.equals("close"))
     	{
-    		
+    		if(server!=null) 
+    			{
+    				try {
+//    					server.stopListening();
+    					server.close();
+    					server = null;
+    				}
+    				catch(Exception e)
+    				{
+    					System.out.println("Could not stop server");
+    				}
+    			}
     	}
     	else if(cmd.equals("stop"))
     	{
