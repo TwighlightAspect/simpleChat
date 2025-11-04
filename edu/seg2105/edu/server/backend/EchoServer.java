@@ -95,6 +95,19 @@ public class EchoServer extends AbstractServer
     			}
     		}
     	}
+    	else if((cmd.length()>"login".length()&&cmd.substring(0,"login".length()).equals("login"))||cmd.equals("login"))
+    	{
+    		try
+    		{
+    			client.sendToClient("Cannot use this command while connected to Server! Terminating Client.");
+    			client.sendToClient(-1);
+    			client.close();
+    		}
+    		catch(Exception e)
+    		{
+    			
+    		}
+    	}
     	
     	else if(cmd.equals("logoff"))
     	{
