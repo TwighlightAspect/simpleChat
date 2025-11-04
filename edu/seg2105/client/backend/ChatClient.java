@@ -58,19 +58,22 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-	  try {
-		  if((int)(msg)==-1)
-		  {
-			  quit();
-			  System.exit(0);
-			  return;
-		  }
-	  }
-	  catch(Exception e)
+	  
+	  if(msg instanceof Integer &&((int)msg)==-1)
 	  {
-//		  clientUI.display(e.toString());
-		  clientUI.display(msg.toString());
+		  terminate = true;
+		  quit();
+		  System.exit(0);
+		  return;
 	  }
+	  else if(msg instanceof Integer && ((int)msg)==0)
+	  {
+		  
+	  }
+	  
+	  
+//		  clientUI.display(e.toString());
+	  clientUI.display(msg.toString());
     
     
     
@@ -81,18 +84,19 @@ public class ChatClient extends AbstractClient
    *
    * @param message The message from the UI.    
    */
-  public void handleMessageFromClientUI(String message)
+  public void handleMessageFromClientUI(String message) throws IOException
   {
-    try
-    {
-      sendToServer(message);
-    }
-    catch(IOException e)
-    {
-    	      clientUI.display
-        ("Could not send message to server.  Terminating client.");
-      quit();
-    }
+//    try
+//    {
+	  sendToServer(message);
+//    }
+//    catch(IOException e)
+//    {
+//    	
+//    	      clientUI.display
+//        ("Could not send message to server.  Terminating client.");
+//      quit();
+//    }
   }
   
   
@@ -108,6 +112,10 @@ public class ChatClient extends AbstractClient
     }
     catch(IOException e) {}
     System.exit(0);
+  }
+  public boolean getTerminate()
+  {
+	  return terminate;
   }
 }
 //End of ChatClient class

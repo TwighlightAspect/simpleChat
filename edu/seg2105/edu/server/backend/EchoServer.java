@@ -17,7 +17,7 @@ import ocsf.server.*;
  * @author Fran&ccedil;ois B&eacute;langer
  * @author Paul Holden
  */
-public class EchoServer extends AbstractServer 
+public class EchoServer extends AbstractServer
 {
   //Class variables *************************************************
   
@@ -48,12 +48,17 @@ public class EchoServer extends AbstractServer
    * @param msg The message received from the client.
    * @param client The connection from which the message originated.
    */
+  public void display(String message)
+  {
+	  System.out.println(message);
+  }
+  
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
-    if(msg.equals("/stop"))
+    if(msg.equals(COMMAND_PREFIX+"stop"))
     {
     	this.stopListening();
     }
@@ -84,6 +89,7 @@ public class EchoServer extends AbstractServer
     	else if(cmd.equals("logoff"))
     	{
     		try {
+    			client.sendToClient(0);
     			client.close();
     		}
     		catch(Exception e){
@@ -95,6 +101,26 @@ public class EchoServer extends AbstractServer
     				
     			}
     		}
+    	}
+    	else if(cmd.equals("gethost"))
+    	{
+    		try {
+    			client.sendToClient(client.getInetAddress().getHostAddress());
+    		}
+    		catch(Exception e)
+    		{
+    			System.out.println("An error occured with get host");
+    		}
+    	}
+    	else if(cmd.equals("getport"))
+    	{
+    		try {
+    			client.sendToClient(String.valueOf(this.getPort()));
+    		}
+    		catch(Exception e){
+    			System.out.println("An error occured with get port");
+    		}
+
     	}
     	
     	
@@ -109,6 +135,11 @@ public class EchoServer extends AbstractServer
     		}
     	}
     }
+  }
+  
+  public void HandleAdminInput(Object msg, ServerConsole admin)
+  {
+	  
   }
   @Override
   protected void clientConnected(ConnectionToClient client)
@@ -204,12 +235,14 @@ public class EchoServer extends AbstractServer
     {
       port = DEFAULT_PORT; //Set port to 5555
     }
-	
-    EchoServer sv = new EchoServer(port);
+    ServerConsole server = new ServerConsole(port);	
+    EchoServer sv = server.getServer();
+//    EchoServer sv = new EchoServer(port);
     
     try 
     {
       sv.listen(); //Start listening for connections
+      server.accept();
     } 
     catch (Exception ex) 
     {
