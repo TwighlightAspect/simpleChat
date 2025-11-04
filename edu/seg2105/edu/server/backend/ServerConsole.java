@@ -85,6 +85,7 @@ public class ServerConsole implements ChatIF {
 		String setport = "setport";
     	int tmp_port = port;
 		String message = fromConsole.nextLine();
+		if(message.charAt(0)!='#') return message;
     	String cmd = message.substring(1);
 //	    	System.out.println(cmd);
     	
@@ -102,18 +103,31 @@ public class ServerConsole implements ChatIF {
     		System.out.println("port updated to "+cmd.substring(setport.length()+1));
     		System.out.println();
     	}
-    	else if(cmd.equals("start")&&server==null)
+    	else if(cmd.equals("start"))
     	{
-    		try {
-    			server = new EchoServer(tmp_port);
+    		if(server==null) {
+	    		try {
+	    			server = new EchoServer(tmp_port);
+	    		}
+	    		catch(Exception e)
+	    		{
+	//	    			System.out.println(tmp_host);
+	//	    			System.out.println(tmp_port);
+	//	    			System.out.println(e);
+	    			System.out.println("Could not connect\n");
+	    		}
     		}
-    		catch(Exception e)
-    		{
-//	    			System.out.println(tmp_host);
-//	    			System.out.println(tmp_port);
-//	    			System.out.println(e);
-    			System.out.println("Could not connect\n");
-    		}
+    		else 
+    			{
+    				try {
+    					server.listen();
+    					server.run();
+    				}
+    				catch(Exception e)
+    				{
+    					System.out.println("Server could not start listening");
+    				}
+    			}
     	}
 //	    	else if(cmd.equals("gethost"))
 //	    	{
@@ -124,6 +138,19 @@ public class ServerConsole implements ChatIF {
     		System.out.println("Port:"+String.valueOf(tmp_port));
 
     	}
+    	else if(cmd.equals("close"))
+    	{
+    		
+    	}
+    	else if(cmd.equals("stop"))
+    	{
+    		if(server!=null) server.stopListening();
+    		else System.out.println("Server currently OFFLINE");
+    	}
+    	else if(cmd.equals("quit"))
+    	{
+    		
+    	}
     	else
     	{
     		System.out.println("invalid command in this context");
@@ -132,8 +159,8 @@ public class ServerConsole implements ChatIF {
 //      System.out.println("Error: Can't setup connection!"
 //                + " Terminating client.");
 //      System.exit(1);
-    
 	}
+	
 
 	public boolean Connected()
 	{

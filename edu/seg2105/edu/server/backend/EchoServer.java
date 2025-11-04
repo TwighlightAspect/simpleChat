@@ -189,6 +189,18 @@ public class EchoServer extends AbstractServer
    */
   protected void serverStopped()
   {
+	  System.out.println("Server has stopped listening for new connections");
+	try {
+		this.sendToAllClients("Server has stopped listening for new connections");
+	}
+	catch(Exception e)
+	{
+		
+	}
+  }
+  
+  protected void serverClosed()
+  {
 	  try {
 		  this.sendToAllClients("Server has shut down.");
 		  System.out.println("Server Shutting Down");
@@ -213,6 +225,10 @@ public class EchoServer extends AbstractServer
     System.out.println
       ("Server has stopped listening for connections.");
   }
+  
+  
+  
+  
   
   
   //Class methods ***************************************************
