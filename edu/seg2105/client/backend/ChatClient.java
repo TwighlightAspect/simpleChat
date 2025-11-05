@@ -69,7 +69,13 @@ public class ChatClient extends AbstractClient
 	  }
 	  else if(msg instanceof Integer && ((int)msg)==0)
 	  {
-		  
+		  try {
+			  closeConnection();
+		  }
+		  catch(Exception e)
+		  {
+			  
+		  }
 	  }
 	  
 	  

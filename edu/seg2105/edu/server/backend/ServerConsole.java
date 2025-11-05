@@ -20,61 +20,22 @@ public class ServerConsole implements ChatIF {
 //		System.out.println();
 		  
 	    
-    	System.out.println("Server OFFLINE\nport: "+String.valueOf(port));
+//    	System.out.println("Server OFFLINE\nport: "+String.valueOf(port));
 //    	String sethost = "sethost";
-    	String setport = "setport";
-    	int tmp_port = port;
-    	while(!Connected())
+//    	String setport = "setport";
+//    	int tmp_port = port;
+    	try {
+    		 server = new EchoServer(port);	
+	    	
+    	}
+    	catch(Exception e)
     	{
-    		display(processInput());
-//	    	String message = fromConsole.nextLine();
-//	    	String cmd = message.substring(1);
-////		    	System.out.println(cmd);
-//	    	
-////		    	if(cmd.length()>sethost.length()&&(cmd.substring(0,sethost.length())).equals(sethost))
-////		    	{
-////		    		System.out.println("setting host...");
-//////		    		tmp_host = cmd.substring(sethost.length()+1);
-////		    		System.out.println("host updated to "+cmd.substring(sethost.length()+1));
-////		    		System.out.println();
-////		    	}
-//	    	if(cmd.length()>setport.length()&&(cmd.substring(0,setport.length())).equals(setport))
-//	    	{
-//	    		System.out.println("setting port...");
-//	    		tmp_port = Integer.parseInt(cmd.substring(setport.length()+1));
-//	    		System.out.println("port updated to "+cmd.substring(setport.length()+1));
-//	    		System.out.println();
-//	    	}
-//	    	else if(cmd.equals("start")&&server==null)
-//	    	{
-//	    		try {
-//	    			server = new EchoServer(tmp_port);
-//	    		}
-//	    		catch(Exception e)
-//	    		{
-////		    			System.out.println(tmp_host);
-////		    			System.out.println(tmp_port);
-////		    			System.out.println(e);
-//	    			System.out.println("Could not connect\n");
-//	    		}
-//	    	}
-////		    	else if(cmd.equals("gethost"))
-////		    	{
-////		    		System.out.println(tmp_host);
-////		    	}
-//	    	else if(cmd.equals("getport"))
-//	    	{
-//	    		System.out.println(String.valueOf(tmp_port));
-//	
-//	    	}
-//	    	else
-//	    	{
-//	    		System.out.println("invalid command in this context");
-//	    	}
-//	      System.out.println("Error: Can't setup connection!"
-//	                + " Terminating client.");
-//	      System.exit(1);
-	    }
+    		while(!Connected())
+	    	{
+	    		display(processInput());
+	
+		    }
+    	}
 	    
 	    // Create scanner object to read from console
 	    

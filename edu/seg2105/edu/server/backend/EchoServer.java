@@ -181,13 +181,13 @@ public class EchoServer extends AbstractServer
   @Override
   synchronized protected void clientDisconnected(ConnectionToClient client)
   {
-	  try {
-		  client.sendToClient("Disconnecting...");
-	  }
-	  catch(Exception e)
-	  {
-		  
-	  }
+//	  try {
+//		  client.sendToClient("Disconnecting...");
+//	  }
+//	  catch(Exception e)
+//	  {
+//		  
+//	  }
 	  super.clientDisconnected(client);
 	  String clientjoinmsg = "A client has disconnected.";
 	  this.sendToAllClients(clientjoinmsg);
