@@ -41,6 +41,9 @@ public class ClientConsole implements ChatIF
    */
   Scanner fromConsole; 
 
+  String login_id;
+  String host;
+  int port;
   
   //Constructors ****************************************************
 
@@ -53,6 +56,9 @@ public class ClientConsole implements ChatIF
   public ClientConsole(String login_id,String host, int port) 
   {
 	fromConsole = new Scanner(System.in); 
+	this.login_id = login_id;
+	this.host = host;
+	this.port = port;
 //	System.out.println(host);
 //	System.out.println(port);
 //	System.out.println();
@@ -65,7 +71,8 @@ public class ClientConsole implements ChatIF
     } 
     catch(IOException exception) 
     {
-    	whenDisconnected(login_id,host,port);
+    	
+//    	whenDisconnected(login_id,host,port);
 //    	System.out.println("Not Connected to Server (host: '"+host+"', port: "+String.valueOf(port)+")");
 //    	String sethost = "sethost";
 //    	String setport = "setport";
@@ -118,9 +125,9 @@ public class ClientConsole implements ChatIF
 //	    		System.out.println("invalid command in this context");
 //	    	}
 //    	}
-//      System.out.println("Error: Can't setup connection!"
-//                + " Terminating client.");
-//      System.exit(1);
+      System.out.println("Error: Can't setup connection!"
+                + " Terminating client.");
+      System.exit(0);
     }
     
     // Create scanner object to read from console
@@ -128,14 +135,14 @@ public class ClientConsole implements ChatIF
     
   }
   
-  public void whenDisconnected(String login_id,String host, int port)
+  public void whenDisconnected()
   {
-	System.out.println("Not Connected to Server (host: '"+host+"', port: "+String.valueOf(port)+")");
+	System.out.println("Not Connected to Server \nUse a command starting with '#' (host: '"+host+"', port: "+String.valueOf(port)+")");
   	String sethost = "sethost";
   	String setport = "setport";
   	String tmp_host = host;
   	int tmp_port = port;
-  	while(!Connected())
+  	while(true)
   	{
 	    	String message = fromConsole.nextLine();
 	    	String cmd = message.substring(1);
@@ -178,6 +185,11 @@ public class ClientConsole implements ChatIF
 	    		System.out.println(String.valueOf(tmp_port));
 	
 	    	}
+	    	else if(cmd.equals("quit"))
+	    	{
+	    		System.out.println("Terminating Client.");
+	    		System.exit(0);
+	    	}
 	    	else
 	    	{
 	    		System.out.println("invalid command in this context");
@@ -200,16 +212,24 @@ public class ClientConsole implements ChatIF
 
       String message;
 
-      while (Connected()) 
+      while (client!=null && client.isConnected()) 
       {
         message = fromConsole.nextLine();
-        try {
-            client.handleMessageFromClientUI(message);
-        }
-        catch(Exception e) {
-        	System.out.println("Could not send message");
-        }
+        if(client!=null&&client.isConnected()) {
+	        try {
+	            client.handleMessageFromClientUI(message);
+	        }
+	        catch(Exception e) {
+	        	System.out.println("Could not send message");
+	        }
         
+        }
+        else
+        {
+        	whenDisconnected();
+//        	System.out.println
+//        		("Client is not connected to Server. Terminating Client...");
+        }
       }
     } 
     catch (Exception ex) 
@@ -283,9 +303,9 @@ public class ClientConsole implements ChatIF
     {
 //    	System.out.println(e);
     }
-    
+    ClientConsole chat= new ClientConsole(login_id,host, port);
     while(true) {
-	    ClientConsole chat= new ClientConsole(login_id,host, port);
+	    
 	    
 	    chat.accept();  //Wait for console data
 	    if(chat.getTerminate()) break;

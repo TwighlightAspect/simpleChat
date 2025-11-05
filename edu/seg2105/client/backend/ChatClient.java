@@ -59,9 +59,10 @@ public class ChatClient extends AbstractClient
    */
   public void handleMessageFromServer(Object msg) 
   {
-	  
+//	System.out.println("received msg "+String.valueOf(msg));  
 	  if(msg instanceof Integer &&((int)msg)==-1)
 	  {
+		  
 		  terminate = true;
 		  quit();
 		  System.exit(0);
@@ -77,13 +78,10 @@ public class ChatClient extends AbstractClient
 			  
 		  }
 	  }
-	  
-	  
-//		  clientUI.display(e.toString());
-	  clientUI.display(msg.toString());
-    
-    
-    
+	  else {
+		  clientUI.display(msg.toString());
+	  }
+	
   }
 
   /**

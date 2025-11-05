@@ -70,7 +70,11 @@ public class ServerConsole implements ChatIF {
     	{
     		if(server==null) {
 	    		try {
+//	    			System.out.println("Creating Server obj...");
 	    			server = new EchoServer(tmp_port);
+	    			server.listen();
+//	    			server.serverStarted();
+//	    			server.run();
 	    		}
 	    		catch(Exception e)
 	    		{
@@ -112,7 +116,10 @@ public class ServerConsole implements ChatIF {
     			{
     				try {
 //    					server.stopListening();
-    					server.close();
+    					server.closeAndDisconnect();
+//    					this.sendToAllClients("Server has shut down.");
+//    					server.sendToAllClients(-1);
+//    					server.close();
     					server = null;
     				}
     				catch(Exception e)
@@ -128,12 +135,19 @@ public class ServerConsole implements ChatIF {
     	}
     	else if(cmd.equals("quit"))
     	{
-    		
+    		if(server!=null) 
+    			{
+    				server.closeAndDisconnect();
+    			}
+    		else System.out.println("Server currently OFFLINE");
+    		System.out.println("Terminating Console.");
+    		System.exit(0);
     	}
     	else
     	{
     		System.out.println("invalid command in this context");
     	}
+    	this.port = tmp_port;
     	return message;
 //      System.out.println("Error: Can't setup connection!"
 //                + " Terminating client.");
@@ -166,12 +180,12 @@ public class ServerConsole implements ChatIF {
 	      String message;
 	      
 
-	      while (Connected()) 
-	      {
-	        message = processInput();
-	        
-	        display(message);
-	      }
+//	      while (Connected()) 
+//	      {
+        message = processInput();
+        
+        display(message);
+//	      }
 	    } 
 	    catch (Exception ex) 
 	    {
